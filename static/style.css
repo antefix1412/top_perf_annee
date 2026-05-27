@@ -86,6 +86,52 @@ body {
   border-bottom: 1px solid #edf0f5;
 }
 
+.search-panel {
+  padding: 0 36px 10px;
+}
+
+.search-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.search-field {
+  display: grid;
+  gap: 8px;
+  color: var(--text);
+  font-weight: 700;
+}
+
+.search-field span {
+  font-size: 0.94rem;
+}
+
+.search-field input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #d9dfeb;
+  border-radius: 10px;
+  background: #ffffff;
+  color: var(--text);
+  font: inherit;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.search-field input:focus {
+  border-color: #7a6edc;
+  box-shadow: 0 0 0 4px rgba(122, 110, 220, 0.12);
+}
+
+.search-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 14px;
+}
+
 button {
   appearance: none;
   border: 0;
@@ -116,6 +162,10 @@ button.secondary,
 button.ghost {
   color: white;
   background: var(--btn-secondary);
+}
+
+button.ghost {
+  background: rgba(177, 183, 193, 0.9);
 }
 
 .status-pill {
@@ -228,6 +278,15 @@ button.ghost {
 
   .status-pill {
     margin-left: 0;
+  }
+
+  .search-panel {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .search-grid {
+    grid-template-columns: 1fr;
   }
 
   .app-footer {

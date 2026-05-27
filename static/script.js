@@ -1,6 +1,20 @@
 const state = {
   payload: null,
+  allResults: [],
+  filteredResults: [],
+  search: {
+    prenom: "",
+    nom: "",
+  },
 };
+
+function normalizeText(value) {
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLowerCase()
+    .trim();
+}
 
 function setStatus(message) {
   const badge = document.getElementById("status-badge");
@@ -18,6 +32,60 @@ function setLastUpdated(value) {
 
 function formatName(result) {
   return `${result.prenom} ${result.nom}`;
+}
+
+function updateSuggestionLists(results) {
+  const prenomsList = document.getElementById("prenoms-list");
+  const nomsList = document.getElementById("noms-list");
+  if (!prenomsList || !nomsList) return;
+
+  const prenoms = new Set();
+  const noms = new Set();
+
+  (results || []).forEach((result) => {
+    if (result.prenom) prenoms.add(result.prenom);
+    if (result.nom) noms.add(result.nom);
+  });
+
+  prenomsList.innerHTML = "";
+  nomsList.innerHTML = "";
+
+  [...prenoms].sort().forEach((prenom) => {
+    const option = document.createElement("option");
+    option.value = prenom;
+    prenomsList.appendChild(option);
+  });
+
+  [...noms].sort().forEach((nom) => {
+    const option = document.createElement("option");
+    option.value = nom;
+    nomsList.appendChild(option);
+  });
+}
+
+function applySearchFilter() {
+  const prenomQuery = normalizeText(state.search.prenom);
+  const nomQuery = normalizeText(state.search.nom);
+
+  const filtered = (state.allResults || []).filter((result) => {
+    const prenomMatch = !prenomQuery || normalizeText(result.prenom).includes(prenomQuery);
+    const nomMatch = !nomQuery || normalizeText(result.nom).includes(nomQuery);
+    return prenomMatch && nomMatch;
+  });
+
+  state.filteredResults = filtered;
+  renderResults(filtered);
+
+  const countEl = document.getElementById("result-count");
+  if (countEl) {
+    countEl.textContent = String(filtered.length);
+  }
+
+  if (prenomQuery || nomQuery) {
+    setStatus(`${filtered.length} résultat(s)`);
+  } else if (state.payload) {
+    setStatus(state.payload.count ? "Pret" : "Vide");
+  }
 }
 
 function renderEmpty(message) {
@@ -86,13 +154,17 @@ async function loadTop3(forceRefresh = false) {
   try {
     const payload = await fetchJson(`/api/top3${forceRefresh ? "?refresh=1" : ""}`);
     state.payload = payload;
-    renderResults(payload.results || []);
+    state.allResults = payload.results || [];
+    updateSuggestionLists(state.allResults);
+    applySearchFilter();
     const countEl = document.getElementById("result-count");
     if (countEl) {
-      countEl.textContent = String(payload.count || 0);
+      countEl.textContent = String((state.filteredResults || state.allResults || []).length);
     }
     setLastUpdated(payload.generated_at || "-");
-    setStatus(payload.count ? "Pret" : "Vide");
+    if (!state.search.prenom && !state.search.nom) {
+      setStatus(payload.count ? "Pret" : "Vide");
+    }
   } catch (error) {
     console.error(error);
     renderEmpty("Impossible de recuperer les resultats FFTT.");
@@ -128,10 +200,70 @@ function downloadResults() {
   window.location.href = "/api/save";
 }
 
+function syncSearchInputs() {
+  const prenomInput = document.getElementById("search-prenom");
+  const nomInput = document.getElementById("search-nom");
+
+  state.search.prenom = prenomInput ? prenomInput.value : "";
+  state.search.nom = nomInput ? nomInput.value : "";
+}
+
+async function executeSearch() {
+  syncSearchInputs();
+
+  if (!state.payload) {
+    await loadTop3(false);
+    return;
+  }
+
+  applySearchFilter();
+}
+
+function resetSearch() {
+  const prenomInput = document.getElementById("search-prenom");
+  const nomInput = document.getElementById("search-nom");
+  if (prenomInput) prenomInput.value = "";
+  if (nomInput) nomInput.value = "";
+
+  state.search.prenom = "";
+  state.search.nom = "";
+  applySearchFilter();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("load-btn")?.addEventListener("click", () => loadTop3(false));
   document.getElementById("refresh-btn")?.addEventListener("click", () => loadTop3(true));
   document.getElementById("copy-btn")?.addEventListener("click", () => copyResults());
   document.getElementById("save-btn")?.addEventListener("click", () => downloadResults());
+  document.getElementById("search-btn")?.addEventListener("click", () => executeSearch());
+  document.getElementById("reset-search-btn")?.addEventListener("click", () => resetSearch());
+
+  document.getElementById("search-prenom")?.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      executeSearch();
+    }
+  });
+
+  document.getElementById("search-nom")?.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      executeSearch();
+    }
+  });
+
+  document.getElementById("search-prenom")?.addEventListener("input", () => {
+    syncSearchInputs();
+    if (state.payload) {
+      applySearchFilter();
+    }
+  });
+
+  document.getElementById("search-nom")?.addEventListener("input", () => {
+    syncSearchInputs();
+    if (state.payload) {
+      applySearchFilter();
+    }
+  });
 
 });
