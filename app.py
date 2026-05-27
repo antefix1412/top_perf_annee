@@ -49,11 +49,8 @@ def make_request(endpoint: str, additional_params: dict[str, str] | None = None,
     try:
         response = requests.get(url, params=params, timeout=timeout)
         response.raise_for_status()
-        response.encoding = "latin-1"
-        try:
-            return response.text.encode("latin-1").decode("utf-8", errors="ignore")
-        except Exception:
-            return response.text
+        response.encoding = response.apparent_encoding or response.encoding or "utf-8"
+        return response.text
     except requests.RequestException as exc:
         logging.error("Erreur API FFTT: %s", exc)
         return None
