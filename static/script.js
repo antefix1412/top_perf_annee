@@ -88,7 +88,10 @@ async function loadTop3(forceRefresh = false) {
     const payload = await fetchJson(`/api/top3${forceRefresh ? "?refresh=1" : ""}`);
     state.payload = payload;
     renderResults(payload.results || []);
-    document.getElementById("result-count").textContent = String(payload.count || 0);
+    const countEl = document.getElementById("result-count");
+    if (countEl) {
+      countEl.textContent = String(payload.count || 0);
+    }
     setLastUpdated(payload.generated_at || "-");
     setStatus(payload.count ? "Pret" : "Vide");
   } catch (error) {

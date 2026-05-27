@@ -21,6 +21,20 @@
             <button id="copy-btn" class="ghost">Copier</button>
           </div>
         </div>
+        <aside class="hero-stats">
+          <div class="stat">
+            <span class="stat-label">Club</span>
+            <strong id="club-number">{{ club_num }}</strong>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Resultats</span>
+            <strong id="result-count">0</strong>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Derniere maj</span>
+            <strong id="last-updated">-</strong>
+          </div>
+        </aside>
       </section>
 
       <section class="card panel">
@@ -44,6 +58,11 @@
                 <th>Ecart</th>
               </tr>
             </thead>
+            <tbody id="results-body">
+              <tr class="empty-row">
+                <td colspan="6">Cliquez sur Charger le Top 3 pour lancer le calcul.</td>
+              </tr>
+            </tbody>
           </table>
         </div>
       </section>
