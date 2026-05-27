@@ -2,10 +2,7 @@ const state = {
   payload: null,
   allResults: [],
   filteredResults: [],
-  search: {
-    prenom: "",
-    nom: "",
-  },
+  searchQuery: "",
 };
 
 function normalizeText(value) {
@@ -35,42 +32,31 @@ function formatName(result) {
 }
 
 function updateSuggestionLists(results) {
-  const prenomsList = document.getElementById("prenoms-list");
-  const nomsList = document.getElementById("noms-list");
-  if (!prenomsList || !nomsList) return;
+  const fullnamesList = document.getElementById("fullnames-list");
+  if (!fullnamesList) return;
 
-  const prenoms = new Set();
-  const noms = new Set();
+  const names = new Set();
 
   (results || []).forEach((result) => {
-    if (result.prenom) prenoms.add(result.prenom);
-    if (result.nom) noms.add(result.nom);
+    const fullName = formatName(result).trim();
+    if (fullName) names.add(fullName);
   });
 
-  prenomsList.innerHTML = "";
-  nomsList.innerHTML = "";
+  fullnamesList.innerHTML = "";
 
-  [...prenoms].sort().forEach((prenom) => {
+  [...names].sort().forEach((name) => {
     const option = document.createElement("option");
-    option.value = prenom;
-    prenomsList.appendChild(option);
-  });
-
-  [...noms].sort().forEach((nom) => {
-    const option = document.createElement("option");
-    option.value = nom;
-    nomsList.appendChild(option);
+    option.value = name;
+    fullnamesList.appendChild(option);
   });
 }
 
 function applySearchFilter() {
-  const prenomQuery = normalizeText(state.search.prenom);
-  const nomQuery = normalizeText(state.search.nom);
+  const query = normalizeText(state.searchQuery);
 
   const filtered = (state.allResults || []).filter((result) => {
-    const prenomMatch = !prenomQuery || normalizeText(result.prenom).includes(prenomQuery);
-    const nomMatch = !nomQuery || normalizeText(result.nom).includes(nomQuery);
-    return prenomMatch && nomMatch;
+    const fullName = normalizeText(formatName(result));
+    return !query || fullName.includes(query);
   });
 
   state.filteredResults = filtered;
@@ -81,7 +67,7 @@ function applySearchFilter() {
     countEl.textContent = String(filtered.length);
   }
 
-  if (prenomQuery || nomQuery) {
+  if (query) {
     setStatus(`${filtered.length} résultat(s)`);
   } else if (state.payload) {
     setStatus(state.payload.count ? "Pret" : "Vide");
@@ -201,11 +187,9 @@ function downloadResults() {
 }
 
 function syncSearchInputs() {
-  const prenomInput = document.getElementById("search-prenom");
-  const nomInput = document.getElementById("search-nom");
+  const searchInput = document.getElementById("search-name");
 
-  state.search.prenom = prenomInput ? prenomInput.value : "";
-  state.search.nom = nomInput ? nomInput.value : "";
+  state.searchQuery = searchInput ? searchInput.value : "";
 }
 
 async function executeSearch() {
@@ -220,13 +204,10 @@ async function executeSearch() {
 }
 
 function resetSearch() {
-  const prenomInput = document.getElementById("search-prenom");
-  const nomInput = document.getElementById("search-nom");
-  if (prenomInput) prenomInput.value = "";
-  if (nomInput) nomInput.value = "";
+  const searchInput = document.getElementById("search-name");
+  if (searchInput) searchInput.value = "";
 
-  state.search.prenom = "";
-  state.search.nom = "";
+  state.searchQuery = "";
   applySearchFilter();
 }
 
@@ -238,28 +219,14 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("search-btn")?.addEventListener("click", () => executeSearch());
   document.getElementById("reset-search-btn")?.addEventListener("click", () => resetSearch());
 
-  document.getElementById("search-prenom")?.addEventListener("keydown", (event) => {
+  document.getElementById("search-name")?.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
       executeSearch();
     }
   });
 
-  document.getElementById("search-nom")?.addEventListener("keydown", (event) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      executeSearch();
-    }
-  });
-
-  document.getElementById("search-prenom")?.addEventListener("input", () => {
-    syncSearchInputs();
-    if (state.payload) {
-      applySearchFilter();
-    }
-  });
-
-  document.getElementById("search-nom")?.addEventListener("input", () => {
+  document.getElementById("search-name")?.addEventListener("input", () => {
     syncSearchInputs();
     if (state.payload) {
       applySearchFilter();

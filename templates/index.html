@@ -25,22 +25,17 @@
         </section>
 
         <section class="search-panel">
-          <div class="search-grid">
-            <label class="search-field">
-              <span>Prénom</span>
-              <input id="search-prenom" type="text" list="prenoms-list" placeholder="Ex: Noah" autocomplete="off" />
-            </label>
-            <label class="search-field">
-              <span>Nom</span>
-              <input id="search-nom" type="text" list="noms-list" placeholder="Ex: BARIL" autocomplete="off" />
+          <div class="search-grid single-field">
+            <label class="search-field search-field-full">
+              <span>Prénom et nom</span>
+              <input id="search-name" type="text" list="fullnames-list" placeholder="Ex: Noah BARIL" autocomplete="off" />
             </label>
           </div>
           <div class="search-actions">
             <button id="search-btn" class="secondary">Rechercher</button>
             <button id="reset-search-btn" class="ghost">Afficher tout</button>
           </div>
-          <datalist id="prenoms-list"></datalist>
-          <datalist id="noms-list"></datalist>
+          <datalist id="fullnames-list"></datalist>
         </section>
 
         <section class="table-section">
