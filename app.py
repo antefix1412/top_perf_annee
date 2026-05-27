@@ -69,6 +69,40 @@ def parse_classement(value: str | None) -> int:
         return 0
 
 
+def parse_match_date(value: str | None) -> datetime | None:
+    if not value or value == "N/A":
+        return None
+
+    cleaned = value.strip()
+    date_formats = (
+        "%d/%m/%Y",
+        "%d/%m/%y",
+        "%Y-%m-%d",
+        "%Y/%m/%d",
+        "%d-%m-%Y",
+        "%d-%m-%y",
+    )
+    for date_format in date_formats:
+        try:
+            return datetime.strptime(cleaned, date_format)
+        except ValueError:
+            continue
+    return None
+
+
+def school_year_start(date_value: datetime) -> int:
+    return date_value.year if date_value.month >= 9 else date_value.year - 1
+
+
+def is_current_school_year(date_value: str | None, reference: datetime | None = None) -> bool:
+    parsed_date = parse_match_date(date_value)
+    if parsed_date is None:
+        return False
+
+    current_reference = reference or datetime.now()
+    return school_year_start(parsed_date) == school_year_start(current_reference)
+
+
 def get_club_players() -> list[dict[str, str]]:
     content = make_request("xml_liste_joueur_o.php", {"club": CLUB_NUM, "valid": "1"})
     players: list[dict[str, str]] = []
@@ -155,6 +189,9 @@ def get_top3_results(force_refresh: bool = False) -> list[dict[str, Any]]:
             continue
 
         for match in matches:
+            if not is_current_school_year(match.get("date")):
+                continue
+
             if match.get("victoire") == "V" and match.get("classement_adv", 0) >= joueur_points + 75:
                 classement_adv = int(match["classement_adv"])
                 ecart = classement_adv - joueur_points
