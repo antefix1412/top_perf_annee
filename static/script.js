@@ -132,6 +132,4 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("copy-btn")?.addEventListener("click", () => copyResults());
   document.getElementById("save-btn")?.addEventListener("click", () => downloadResults());
 
-  loadPlayersSummary();
-  loadTop3(false);
 });
