@@ -9,62 +9,47 @@
     <script defer src="{{ url_for('static', filename='script.js') }}"></script>
   </head>
   <body data-club="{{ club_num }}">
-    <div class="bg-orb bg-orb-a"></div>
-    <div class="bg-orb bg-orb-b"></div>
-    <main class="shell">
-      <section class="hero card">
-        <div class="hero-copy">
-          <p class="eyebrow">FFTT / web app</p>
-          <h1>Top des performances</h1>
-          <div class="actions">
-            <button id="load-btn" class="primary">Charger le Top</button>
-            <button id="copy-btn" class="ghost">Copier</button>
+    <main class="page-shell">
+      <section class="app-card">
+        <header class="app-header">
+          <div class="app-title-row">
+            <span class="app-emoji" aria-hidden="true">🏓</span>
+            <h1>Progression FFTT</h1>
           </div>
-        </div>
-        <aside class="hero-stats">
-          <div class="stat">
-            <span class="stat-label">Club</span>
-            <strong id="club-number">{{ club_num }}</strong>
-          </div>
-          <div class="stat">
-            <span class="stat-label">Resultats</span>
-            <strong id="result-count">0</strong>
-          </div>
-          <div class="stat">
-            <span class="stat-label">Derniere maj</span>
-            <strong id="last-updated">-</strong>
-          </div>
-        </aside>
-      </section>
+        </header>
 
-      <section class="card panel">
-        <div class="panel-head">
-          <div>
-            <p class="eyebrow">Classement</p>
-            <h2>Les meilleures performances detectees</h2>
-          </div>
-          <div class="panel-badge" id="status-badge">Pret</div>
-        </div>
+        <section class="toolbar">
+          <button id="load-btn" class="primary">↻ Afficher Les Progressions</button>
+          <button id="copy-btn" class="secondary">📋 Copier tout</button>
+          <div class="status-pill" id="status-badge">Prêt</div>
+        </section>
 
-        <div class="table-wrap">
-          <table class="results-table">
-            <thead>
-              <tr>
-                <th>Rang</th>
-                <th>Date</th>
-                <th>Joueur</th>
-                <th>Points joueur</th>
-                <th>Points adversaire</th>
-                <th>Ecart</th>
-              </tr>
-            </thead>
-            <tbody id="results-body">
-              <tr class="empty-row">
-                <td colspan="6">Cliquez sur Charger le Top pour lancer le calcul.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <section class="table-section">
+          <div class="table-wrap">
+            <table class="results-table">
+              <thead>
+                <tr>
+                  <th>Prénom</th>
+                  <th>Nom</th>
+                  <th>Points officiels</th>
+                  <th>Points virtuels</th>
+                  <th>Progression</th>
+                </tr>
+              </thead>
+              <tbody id="results-body">
+                <tr class="empty-row">
+                  <td colspan="5">Aucune donnée à afficher</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <footer class="app-footer">
+          <span id="club-number">{{ club_num }}</span>
+          <span id="result-count">0</span>
+          <span id="last-updated">-</span>
+        </footer>
       </section>
     </main>
   </body>
