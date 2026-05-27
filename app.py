@@ -207,7 +207,7 @@ def get_top3_results(force_refresh: bool = False) -> list[dict[str, Any]]:
                 )
 
     results.sort(key=lambda item: item["ecart"], reverse=True)
-    top_results = results[:10]
+    top_results = results
     payload = build_top3_payload(top_results)
     set_cache(CACHE_KEY_TOP3, payload)
     return top_results
