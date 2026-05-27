@@ -148,7 +148,7 @@ async function loadTop3(forceRefresh = false) {
       countEl.textContent = String((state.filteredResults || state.allResults || []).length);
     }
     setLastUpdated(payload.generated_at || "-");
-    if (!state.search.prenom && !state.search.nom) {
+    if (!state.searchQuery || String(state.searchQuery).trim() === "") {
       setStatus(payload.count ? "Pret" : "Vide");
     }
   } catch (error) {
