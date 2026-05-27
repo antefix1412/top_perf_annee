@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 import json
+import tempfile
 from pathlib import Path
 from threading import Lock
 from time import time
 from typing import Any
 
-CACHE_DIR = Path(__file__).resolve().parent / ".cache"
+CACHE_DIR = Path(tempfile.gettempdir()) / "fftt_top3_web_cache"
 CACHE_FILE = CACHE_DIR / "cache.json"
 CACHE_LOCK = Lock()
 
