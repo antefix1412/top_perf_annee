@@ -27,7 +27,7 @@ function renderEmpty(message) {
   const row = document.createElement("tr");
   row.className = "empty-row";
   const cell = document.createElement("td");
-  cell.colSpan = 6;
+  cell.colSpan = 5;
   cell.textContent = message;
   row.appendChild(cell);
   body.appendChild(row);
@@ -43,14 +43,11 @@ function renderResults(results) {
     return;
   }
 
-  const medals = ["1", "2", "3"];
-
   results.forEach((result, index) => {
     const row = document.createElement("tr");
     row.className = `rank-${index + 1}`;
 
     const cells = [
-      medals[index] || String(index + 1),
       result.date || "N/A",
       formatName(result),
       String(result.points_joueur ?? "-"),
@@ -61,9 +58,6 @@ function renderResults(results) {
     cells.forEach((value, cellIndex) => {
       const cell = document.createElement("td");
       cell.textContent = value;
-      if (cellIndex === 0) {
-        cell.className = "rank-cell";
-      }
       row.appendChild(cell);
     });
 
