@@ -14,31 +14,38 @@
         <header class="app-header">
           <div class="app-title-row">
             <span class="app-emoji" aria-hidden="true">🏓</span>
-            <h1>Progression FFTT</h1>
+            <h1>Top des performances</h1>
           </div>
         </header>
 
         <section class="toolbar">
-          <button id="load-btn" class="primary">↻ Afficher Les Progressions</button>
-          <button id="copy-btn" class="secondary">📋 Copier tout</button>
-          <div class="status-pill" id="status-badge">Prêt</div>
+          <button id="load-btn" class="primary">Charger le Top</button>
+          <button id="copy-btn" class="ghost">Copier</button>
+          <div class="status-pill" id="status-badge">Pret</div>
         </section>
 
         <section class="table-section">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Classement</p>
+              <h2>Les meilleures performances détectées</h2>
+            </div>
+          </div>
           <div class="table-wrap">
             <table class="results-table">
               <thead>
                 <tr>
-                  <th>Prénom</th>
-                  <th>Nom</th>
-                  <th>Points officiels</th>
-                  <th>Points virtuels</th>
-                  <th>Progression</th>
+                  <th>Rang</th>
+                  <th>Date</th>
+                  <th>Joueur</th>
+                  <th>Points joueur</th>
+                  <th>Points adversaire</th>
+                  <th>Ecart</th>
                 </tr>
               </thead>
               <tbody id="results-body">
                 <tr class="empty-row">
-                  <td colspan="5">Aucune donnée à afficher</td>
+                  <td colspan="6">Cliquez sur Charger le Top pour lancer le calcul.</td>
                 </tr>
               </tbody>
             </table>
@@ -46,6 +53,7 @@
         </section>
 
         <footer class="app-footer">
+          <span class="eyebrow">FFTT / web app</span>
           <span id="club-number">{{ club_num }}</span>
           <span id="result-count">0</span>
           <span id="last-updated">-</span>
