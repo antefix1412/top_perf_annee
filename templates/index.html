@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Top 3 FFTT - version web" />
+    <title>Top 3 FFTT</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <script defer src="{{ url_for('static', filename='script.js') }}"></script>
+  </head>
+  <body data-club="{{ club_num }}">
+    <div class="bg-orb bg-orb-a"></div>
+    <div class="bg-orb bg-orb-b"></div>
+    <main class="shell">
+      <section class="hero card">
+        <div class="hero-copy">
+          <p class="eyebrow">FFTT / web app</p>
+          <h1>Top 3 des performances</h1>
+          <p class="lede">
+            Version web du programme Python, avec chargement des donnees FFTT,
+            cache local et export direct.
+          </p>
+          <div class="actions">
+            <button id="load-btn" class="primary">Charger le Top 3</button>
+            <button id="refresh-btn" class="secondary">Rafraichir le cache</button>
+            <button id="copy-btn" class="ghost">Copier</button>
+            <button id="save-btn" class="ghost">Telecharger</button>
+          </div>
+        </div>
+        <aside class="hero-stats">
+          <div class="stat">
+            <span class="stat-label">Club</span>
+            <strong id="club-number">{{ club_num }}</strong>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Resultats</span>
+            <strong id="result-count">0</strong>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Derniere maj</span>
+            <strong id="last-updated">-</strong>
+          </div>
+        </aside>
+      </section>
+
+      <section class="card panel">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Classement</p>
+            <h2>Les meilleures performances detectees</h2>
+          </div>
+          <div class="panel-badge" id="status-badge">Pret</div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th>Rang</th>
+                <th>Date</th>
+                <th>Joueur</th>
+                <th>Points joueur</th>
+                <th>Points adversaire</th>
+                <th>Ecart</th>
+              </tr>
+            </thead>
+            <tbody id="results-body">
+              <tr class="empty-row">
+                <td colspan="6">Cliquez sur Charger le Top 3 pour lancer le calcul.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card footer-note">
+        <p>
+          Cette interface expose les memes donnees que le script original, mais via
+          une API web. Les boutons permettent de rafraichir, copier ou telecharger
+          le resume texte.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>
