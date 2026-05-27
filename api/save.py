@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app import app as application
 from app import results_filename, top3_as_text
 
 

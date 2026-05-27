@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app import app as application
 from app import CLUB_NUM, get_club_players_cached
 
 
