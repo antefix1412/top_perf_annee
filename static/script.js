@@ -57,7 +57,12 @@ function renderResults(results) {
 
     cells.forEach((value, cellIndex) => {
       const cell = document.createElement("td");
-      cell.textContent = value;
+      if (cellIndex === cells.length - 1) {
+        cell.className = "progress-cell";
+        cell.innerHTML = `<span class="progress-pill">${value}</span>`;
+      } else {
+        cell.textContent = value;
+      }
       row.appendChild(cell);
     });
 
