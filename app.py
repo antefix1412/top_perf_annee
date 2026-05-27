@@ -189,7 +189,7 @@ def get_top3_results(force_refresh: bool = False) -> list[dict[str, Any]]:
             if not is_current_school_year(match.get("date")):
                 continue
 
-            if match.get("victoire") == "V" and match.get("classement_adv", 0) >= joueur_points + 75:
+            if match.get("victoire") == "V" and match.get("classement_adv", 0) >= joueur_points + 1:
                 classement_adv = int(match["classement_adv"])
                 ecart = classement_adv - joueur_points
                 results.append(
